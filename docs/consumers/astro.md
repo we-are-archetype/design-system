@@ -6,7 +6,7 @@ runs. Astro 7, Tailwind v4 through the Vite plugin, this system pinned to a tag.
 ## Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.1.2
+npm i github:we-are-archetype/design-system#v1.2.1
 npm i -D tailwindcss @tailwindcss/vite
 ```
 

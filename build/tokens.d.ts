@@ -1,7 +1,7 @@
 /* Archetype design tokens — type declarations.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.1.2
+   @archetype/design-system v1.2.1
 */
 
 export type ColorName =

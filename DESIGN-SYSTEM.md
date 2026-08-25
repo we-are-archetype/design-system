@@ -499,7 +499,7 @@ emoji. Stroke 1.5 on a 24px grid.
 ### Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.1.2   # pin a tag, never a branch
+npm i github:we-are-archetype/design-system#v1.2.1   # pin a tag, never a branch
 ```
 
 `build/` is committed, so a git install needs no build step.

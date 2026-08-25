@@ -5,41 +5,7 @@ never a branch. A tag and `meta.version` in `tokens.json` must agree — CI
 enforces it, because a tag that publishes a different version means anyone
 pinned to it quietly installed something else.
 
-## 1.2.0 — 2026-08-25
-
-The logo family gets a single source, the way the tokens already had one.
-
-### Added
-- `scripts/logo.mjs` — derives `archetype-mark-square.svg`,
-  `archetype-wordmark.svg` and `archetype-lockup.svg` from
-  `archetype-mark.svg`. `npm run logo` regenerates, `npm run check:logo` reports
-  staleness.
-- `logo.wordmark` and `logo.lockup` in `tokens.json` — the typesetting the two
-  live-text files need. `letterSpacing` is not among them: it is derived from
-  `scale.tracking.wordmark`, so the wordmark's tracking now has one source.
-- Build checks: `tokens.json` → `logo` must match the geometry actually drawn in
-  the mark; the circle stroke must be exactly half the heaviest stroke, which §6
-  states as a rule and nothing previously enforced; no derived logo file may be
-  stale. CI regenerates `assets/logo/` and fails on a diff, same contract as
-  `build/`.
-
-### Fixed
-- **`archetype-wordmark.svg` shipped `letter-spacing="1"` — 0.017em — against
-  the lockup's `1.16` and a spec that asks for 0.02em.** The two files were
-  hand-copies of each other and had drifted. Both now derive it.
-
-### Changed
-- `archetype-lockup.svg`'s baseline moves 620 → 621, because it is now computed
-  from the gap and cap height rather than typed. 0.15% of the coordinate space;
-  the canvas is unchanged at 667×630.
-- `archetype-mark-square.svg` regenerated **byte-identical** to the hand-authored
-  file, which is the evidence that the derivation matches the original intent.
-
-### Note
-`archetype-mark.svg` is untouched. This release changes how the other three are
-produced, not what the mark is.
-
-## 1.1.2 — 2026-08-25
+## 1.2.1 — 2026-08-25
 
 Preconnect hints as a single-source value, and `font-display` recorded per
 family — because Adobe sets it per family, which is easy to get half-done.
@@ -75,6 +41,40 @@ family — because Adobe sets it per family, which is easy to get half-done.
   family in the Adobe Fonts web project, then update `font.kit.fontDisplay`.
 - Outlining the two live-text SVGs would remove their webfont dependency, and
   with it the wordmark's share of this problem.
+
+## 1.2.0 — 2026-08-25
+
+The logo family gets a single source, the way the tokens already had one.
+
+### Added
+- `scripts/logo.mjs` — derives `archetype-mark-square.svg`,
+  `archetype-wordmark.svg` and `archetype-lockup.svg` from
+  `archetype-mark.svg`. `npm run logo` regenerates, `npm run check:logo` reports
+  staleness.
+- `logo.wordmark` and `logo.lockup` in `tokens.json` — the typesetting the two
+  live-text files need. `letterSpacing` is not among them: it is derived from
+  `scale.tracking.wordmark`, so the wordmark's tracking now has one source.
+- Build checks: `tokens.json` → `logo` must match the geometry actually drawn in
+  the mark; the circle stroke must be exactly half the heaviest stroke, which §6
+  states as a rule and nothing previously enforced; no derived logo file may be
+  stale. CI regenerates `assets/logo/` and fails on a diff, same contract as
+  `build/`.
+
+### Fixed
+- **`archetype-wordmark.svg` shipped `letter-spacing="1"` — 0.017em — against
+  the lockup's `1.16` and a spec that asks for 0.02em.** The two files were
+  hand-copies of each other and had drifted. Both now derive it.
+
+### Changed
+- `archetype-lockup.svg`'s baseline moves 620 → 621, because it is now computed
+  from the gap and cap height rather than typed. 0.15% of the coordinate space;
+  the canvas is unchanged at 667×630.
+- `archetype-mark-square.svg` regenerated **byte-identical** to the hand-authored
+  file, which is the evidence that the derivation matches the original intent.
+
+### Note
+`archetype-mark.svg` is untouched. This release changes how the other three are
+produced, not what the mark is.
 
 ## 1.1.1 — 2026-08-25
 
