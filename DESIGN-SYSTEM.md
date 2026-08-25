@@ -95,9 +95,25 @@ the distinction is recorded rather than assumed.
 
 `bronze-700` appears as a hairline, a small mark, or a single emphasized word.
 **Never a button, a CTA, or a large surface fill** — the build rejects it as any
-`background-*`, `action-*` or `*-bg` value. Making bronze prominent turns the
-brand corporate-luxury, which is the failure mode. `bronze-500` on `stone-100`
-lands at exactly 3.00:1; never set type there.
+`background-*` value or anything carrying a `bg` segment. Making bronze
+prominent turns the brand corporate-luxury, which is the failure mode.
+`bronze-500` on `stone-100` lands at exactly 3.00:1; never set type there.
+
+### The one warm foreground: an outline action's hover
+
+The exception, and the only one: an outline action fills with verdigris on hover
+and sets its **label** warm. `action-secondary-bg-hover` and
+`action-secondary-fg-hover` name that pair. Bronze here is a foreground on an
+accent fill, not a fill — the distinction §1 has always drawn, now expressible.
+
+The value is forced by contrast, not chosen. Against `verdigris-700`, the
+brand's actual gold `bronze-700` measures **1.41:1** and `bronze-500` **2.47:1** —
+both invisible — and `bronze-300`, the warm-on-dark token, reaches only 4.10:1,
+under the 4.5 floor every role in this system holds to. Only `bronze-100` clears
+it, at 6.59:1. In dark the pair inverts to `bronze-900` on `verdigris-300`,
+4.81:1. Both are declared minimums the build enforces.
+
+This is still 2% territory. It is one label, on hover, on one control.
 
 ### Reach for the semantic layer
 
@@ -510,7 +526,7 @@ emoji. Stroke 1.5 on a 24px grid.
 ### Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.3.0   # pin a tag, never a branch
+npm i github:we-are-archetype/design-system#v1.4.0   # pin a tag, never a branch
 ```
 
 `build/` is committed, so a git install needs no build step.

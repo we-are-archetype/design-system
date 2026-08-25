@@ -5,6 +5,39 @@ never a branch. A tag and `meta.version` in `tokens.json` must agree — CI
 enforces it, because a tag that publishes a different version means anyone
 pinned to it quietly installed something else.
 
+## 1.4.0 — 2026-08-25
+
+A named hover for the outline action, and the fill check corrected to test
+fills.
+
+### Added
+- `action-secondary-bg-hover` and `action-secondary-fg-hover`. An outline action
+  fills with verdigris on hover and sets its label warm. Light:
+  `verdigris-700` under `bronze-100`. Dark: `verdigris-300` under `bronze-900`,
+  the accent shifting to its lighter step and the label to its darker one, per
+  §1's dark rule.
+- Two declared contrast minimums covering that pair, so the combination cannot
+  drift out of legibility unnoticed: 6.59:1 light, 4.81:1 dark.
+
+### Changed
+- **§1 now permits one warm foreground.** Bronze as a *label on an accent fill*
+  is a foreground, not a fill, which is the distinction §1 always drew but could
+  not express. It remains barred from every surface.
+- **`rules.neverFill` was over-matching.** The check treated the entire
+  `action-*` namespace as fills, so it also caught `-fg` and `-border` — a
+  foreground and a hairline, both of which §1 allows bronze to be. It now tests
+  `background-*` and anything carrying a `bg` segment. No existing token changes
+  behaviour: every `action-*-fg` in the system was already stone, which is why
+  this never fired.
+
+### Why bronze-100 and not the brand's gold
+Forced by measurement, not preference. On `verdigris-700` the actual gold
+accent `bronze-700` measures **1.41:1** and `bronze-500` **2.47:1** — both
+effectively invisible. `bronze-300`, the warm-on-dark token, reaches 4.10:1,
+under the 4.5 floor every role here holds to with no large-text caveat. Only
+`bronze-100` clears it. A consumer wanting a richer gold has to raise the label
+past the large-text threshold first; at 12px there is no other option.
+
 ## 1.3.0 — 2026-08-25
 
 **A new mark.** The first revision of the artwork itself since the system was

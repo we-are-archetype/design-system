@@ -1,14 +1,14 @@
 /* Archetype design tokens — JavaScript.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.3.0
+   @archetype/design-system v1.4.0
 */
 // For anything that cannot read CSS: document pipelines, canvas rendering,
 // email templates, PDF generation, Figma sync.
 
 export const meta = {
   "name": "@archetype/design-system",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "spec": "DESIGN-SYSTEM.md",
   "note": "This file is the only place a value is typed. Everything in build/ is generated from it by scripts/build.mjs. DESIGN-SYSTEM.md carries prose rules and references tokens by name, never by value. If a hex appears in two places, one of them is wrong."
 };
@@ -77,6 +77,8 @@ export const semantic = {
   "action-secondary-border": "#CFC8BC",
   "action-secondary-border-hover": "#1A1816",
   "action-secondary-fg": "#1A1816",
+  "action-secondary-bg-hover": "#2E5349",
+  "action-secondary-fg-hover": "#EDE0CC",
   "action-accent-bg": "#2E5349",
   "action-accent-bg-hover": "#1B342E",
   "action-accent-fg": "#FAF8F5",
@@ -124,6 +126,8 @@ export const semanticDark = {
   "action-secondary-border": "#635C55",
   "action-secondary-border-hover": "#F1EEE8",
   "action-secondary-fg": "#F1EEE8",
+  "action-secondary-bg-hover": "#8FAFA5",
+  "action-secondary-fg-hover": "#4A361E",
   "action-accent-bg": "#8FAFA5",
   "action-accent-bg-hover": "#DCE6E2",
   "action-accent-fg": "#1A1816",

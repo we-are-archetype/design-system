@@ -1,7 +1,7 @@
 /* Archetype design tokens — Tailwind v4 theme.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.3.0
+   @archetype/design-system v1.4.0
 */
 
 /* CONTRACT: the consumer imports tailwindcss FIRST, then this file. This file
@@ -92,6 +92,8 @@
   --color-action-secondary-border: var(--color-stone-300);
   --color-action-secondary-border-hover: var(--color-stone-900);
   --color-action-secondary-fg:   var(--color-stone-900);
+  --color-action-secondary-bg-hover: var(--color-verdigris-700);
+  --color-action-secondary-fg-hover: var(--color-bronze-100);
   --color-action-accent-bg:      var(--color-verdigris-700);
   --color-action-accent-bg-hover: var(--color-verdigris-900);
   --color-action-accent-fg:      var(--color-stone-50);
@@ -259,6 +261,8 @@
   --color-action-secondary-border: var(--color-stone-600);
   --color-action-secondary-border-hover: var(--color-stone-100);
   --color-action-secondary-fg:   var(--color-stone-100);
+  --color-action-secondary-bg-hover: var(--color-verdigris-300);
+  --color-action-secondary-fg-hover: var(--color-bronze-900);
   --color-action-accent-bg:      var(--color-verdigris-300);
   --color-action-accent-bg-hover: var(--color-verdigris-100);
   --color-action-accent-fg:      var(--color-stone-900);

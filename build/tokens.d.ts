@@ -1,7 +1,7 @@
 /* Archetype design tokens — type declarations.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.3.0
+   @archetype/design-system v1.4.0
 */
 
 export type ColorName =
@@ -65,6 +65,8 @@ export type SemanticName =
   | "action-secondary-border"
   | "action-secondary-border-hover"
   | "action-secondary-fg"
+  | "action-secondary-bg-hover"
+  | "action-secondary-fg-hover"
   | "action-accent-bg"
   | "action-accent-bg-hover"
   | "action-accent-fg"

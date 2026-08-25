@@ -119,7 +119,11 @@ for (const rule of T.rules.minContrast) {
 {
   const { tokens, except } = T.rules.neverFill;
   for (const key of realKeys(T.semantic)) {
-    const isFill = key.startsWith("background-") || key.endsWith("-bg") || key.startsWith("action-");
+    // A fill, specifically — not the whole action-* namespace. Bronze as a
+    // hairline or as a label on an accent fill is a foreground, which §1 allows;
+    // only surfaces are barred. Matching `action-` wholesale also caught
+    // `-fg` and `-border`, which it was never meant to.
+    const isFill = key.startsWith("background-") || /(^|-)bg(-|$)/.test(key);
     if (!isFill || except.includes(key)) continue;
     if (tokens.includes(T.semantic[key])) {
       fail(`semantic.${key} fills a surface with ${T.semantic[key]}. Bronze is a hairline, a small mark, or one emphasized word.`);
