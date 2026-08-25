@@ -393,36 +393,47 @@ build` and fix whatever it names. Prose is the part it cannot check — if the
 aspect moves, the figures quoted here and in `skill/SKILL.md` and
 `docs/consumers/astro.md` need a pass.
 
-Geometry, in the file's own 667×540 coordinate space:
+Geometry, in the file's own 667×560 coordinate space:
 
-- **Circle** — `cx 333.5, cy 290, r 245`, stroke **10**.
-- **Triangle** — stroke **20**, drawn as an outlined path rather than a
-  three-point stroke, apex at `(333.5, 20)`, base corners at `(99.68, 425)` and
-  `(567.32, 425)`. All three points sit **outside** the circle: the apex clears
-  the top of the arc by about 30 units, and each base corner breaks through the
-  lower arc by a similar amount. The base is a drawn chord, so the form is a
-  closed triangle rather than an open "A".
-- **Crossbar** — stroke **20**, spanning `y 280–300`, centred exactly on the
-  circle's horizontal centreline, running the **full width, 0 to 667** — an
-  overhang of 0.34r on each side. Ends are chamfered with the bottom edge
-  longer than the top.
+- **Circle** — `cx 333.5, cy 310, r 242.5`, stroke **15**. It spans `x 91–576`
+  and `y 67.5–552.5`.
+- **Triangle** — stroke **30**, drawn as an outlined path rather than a
+  three-point stroke, apex at `(333.5, 30)`, base corners at `(91.02, 450)` and
+  `(575.98, 450)`. All three points sit **outside** the circle: the apex clears
+  the top of the arc by 37.5, and each base corner breaks through the lower arc
+  by 44.5 — at `y 450` the circle is only 396 wide against the triangle's 485.
+  The base is a drawn chord, so the form is a closed triangle rather than an
+  open "A".
+- **Crossbar** — stroke **30**, spanning `y 295–325`, centred exactly on the
+  circle's horizontal centreline (midpoint 310, which is `cy`), running the
+  **full width, 0 to 667** — an overhang of 0.38r on each side. Ends are
+  chamfered with the bottom edge longer than the top.
 
 Rules:
 
-- **The circle stroke is exactly half the triangle and crossbar weight** — 10
-  against 20.
+- **The circle stroke is exactly half the triangle and crossbar weight** — 15
+  against 30. The build enforces this.
+- **The triangle's base is exactly the circle diameter**, 485, and its corners
+  land on the circle's left and right extremes — `x 91` and `x 576`. The base is
+  the diameter laid flat. This relationship is the clearest thing to check a
+  redraw against, and the previous revision did not have it.
 - **Never clip the crossbar to the circle.** The overhang is the mark's
-  distinguishing move.
+  distinguishing move, and it begins exactly at the circle's left extreme.
 - **The triangle breaking the circle at all three points is deliberate** and is
   the current revision. An earlier version had the vertices sitting on the arc.
   The circle contains the form without quite holding it.
-- **Aspect is 1.24:1, not square.** Set height and let width follow. Anything
-  carrying 1.17:1 or 1.28:1 is stale.
+- **Aspect is 1.19:1, not square.** Set height and let width follow. Anything
+  carrying 1.17:1, **1.24:1** or 1.28:1 is stale — 1.24:1 was this mark's own
+  immediately previous revision, so it is the one most likely to still be
+  sitting in a consuming project.
 - **Wordmark tracking is near-zero (0.02em), not wide.** Set in Neue Haas
   Grotesk Display 75 Bold. Wide tracking belongs to the `eyebrow` role, which is
   a deliberate systemic echo of the wordmark rather than the same treatment.
-- In the lockup the wordmark is about **0.76× the circle diameter**, set close
-  beneath the mark at a gap of about 0.08× diameter.
+- In the lockup the wordmark is **0.76× the circle diameter**, set beneath the
+  mark at a gap of 0.08× diameter. Both are now derived rather than asserted:
+  `scripts/logo.mjs` solves for the font size that renders that width, using
+  advance and ink metrics measured from a real render of the production face.
+  The hand-set size this replaced rendered 0.728× while the spec claimed 0.76.
 
 All files use `currentColor`. Set `color` on the parent to recolor; there is no
 `fill` attribute to override. `archetype-mark-square.svg` exists for favicons
@@ -499,7 +510,7 @@ emoji. Stroke 1.5 on a 24px grid.
 ### Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.2.1   # pin a tag, never a branch
+npm i github:we-are-archetype/design-system#v1.3.0   # pin a tag, never a branch
 ```
 
 `build/` is committed, so a git install needs no build step.

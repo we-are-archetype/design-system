@@ -121,14 +121,21 @@ export function buildWordmark() {
  */
 export function buildLockup(mark, geometry) {
   const { width, height, inner } = mark;
-  const { gapOfDiameter, bottomPad } = T.logo.lockup;
-  const { fontSize, capHeightRatio } = T.logo.wordmark;
+  const { widthOfDiameter, gapOfDiameter, bottomPad } = T.logo.lockup;
+  const { advanceRatio, inkAscentRatio, inkDescentRatio } = T.logo.wordmark.metrics;
 
   const diameter = geometry.circle.r * 2;
+
+  // The font size is solved for, not chosen: pick the size whose rendered
+  // advance is widthOfDiameter x the circle. This is what makes the declared
+  // 0.76 true — it was hand-set to 58 before, which rendered 0.728.
+  const fontSize = round((widthOfDiameter * diameter) / advanceRatio);
+
+  // The gap is to the ink, not to the cap line, so the ascent measurement is
+  // the one that places the baseline.
   const gap = diameter * gapOfDiameter;
-  const capHeight = fontSize * capHeightRatio;
-  const baseline = Math.round(height + gap + capHeight);
-  const canvasHeight = baseline + bottomPad;
+  const baseline = Math.round(height + gap + inkAscentRatio * fontSize);
+  const canvasHeight = Math.round(baseline + inkDescentRatio * fontSize + bottomPad);
 
   return doc(
     width,

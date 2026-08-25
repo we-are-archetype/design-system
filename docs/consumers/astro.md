@@ -6,7 +6,7 @@ runs. Astro 7, Tailwind v4 through the Vite plugin, this system pinned to a tag.
 ## Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.2.1
+npm i github:we-are-archetype/design-system#v1.3.0
 npm i -D tailwindcss @tailwindcss/vite
 ```
 
@@ -149,7 +149,7 @@ at build time rather than committing a second copy that drifts:
 { "scripts": { "prebuild": "node scripts/favicons.mjs" } }
 ```
 
-Use `archetype-mark-square.svg` for favicons. The primary mark is **1.24:1, not
+Use `archetype-mark-square.svg` for favicons. The primary mark is **1.19:1, not
 square**, and squashing it into a square viewport is the most common way this
 brand gets broken.
 

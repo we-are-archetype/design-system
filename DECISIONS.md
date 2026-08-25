@@ -11,6 +11,63 @@ Newest first.
 
 ---
 
+## 2026-08-25 — Measure the render, not the metrics API
+
+**Decision:** the font metrics in `logo.wordmark.metrics` are measured by
+rasterising the lockup at 3x with the real faces loaded and reading the ink out
+of the pixels — not from `canvas.measureText()`.
+
+**Why:** because the two disagreed, and the render was right. `measureText()`
+reported an ink ascent of 0.6895 em for the wordmark string. The browser
+actually drew 0.734. Placing the lockup baseline from the former put the
+mark-to-wordmark gap at 0.073 of the diameter against a specified 0.080 —
+visible as slightly too tight, and wrong for a reason nothing would have
+surfaced.
+
+**The trap that produced a second wrong answer first.** The obvious way to
+rasterise an SVG is to load it into an `<img>` and draw it to a canvas. That
+returns a measurement of **Helvetica**, because an SVG in an `<img>` is an
+isolated document with no access to the page's fonts — the same rule this system
+already documents for `currentColor`, applied to webfonts. The measurement has
+to come from the SVG inlined in the DOM, screenshotted, and only then read back
+as a raster.
+
+**What this says about the lockup file itself:** `archetype-lockup.svg` and
+`archetype-wordmark.svg` typeset correctly only when inlined. Delivered through
+an `<img>`, both fall back to Helvetica. That is not new — it is the same
+irreducible exception §2 already names — but it is now demonstrated rather than
+inferred, and it is the strongest argument yet for outlining them.
+
+**Files:** `tokens.json` `logo.wordmark.metrics`, `scripts/logo.mjs`
+
+---
+
+## 2026-08-25 — The lockup's font size is solved for, not chosen
+
+**Decision:** `scripts/logo.mjs` computes the lockup's wordmark font size from
+`lockup.widthOfDiameter` and the measured advance ratio, rather than reading a
+declared `fontSize`.
+
+**Why:** `widthOfDiameter: 0.76` had been sitting in `tokens.json` since the
+generator was written, describing a relationship that nothing read and nothing
+enforced. The lockup's actual size was a hand-set 58, which rendered 0.728 of
+the diameter. The file and the description of the file disagreed by 4%, in the
+direction nobody would notice by eye.
+
+**What it buys:** the lockup now rescales correctly when the mark is redrawn —
+which it was, in this same release, from a diameter of 490 to 485. Under the old
+arrangement that would have silently drifted the proportion again.
+
+**The limit:** `advanceRatio` is face-dependent and carries a note saying to
+re-measure if the display family changes. Text advance genuinely cannot be
+computed without rendering a font, so a measured constant with a warning on it
+is the honest form. The standalone wordmark keeps a declared size, because it
+stands alone and has no diameter to be proportional to.
+
+**Files:** `scripts/logo.mjs`, `tokens.json` `logo.lockup`
+
+---
+
 ## 2026-08-25 — One drawn file, three derived
 
 **Decision:** `assets/logo/archetype-mark.svg` is the only hand-authored logo

@@ -5,6 +5,49 @@ never a branch. A tag and `meta.version` in `tokens.json` must agree — CI
 enforces it, because a tag that publishes a different version means anyone
 pinned to it quietly installed something else.
 
+## 1.3.0 — 2026-08-25
+
+**A new mark.** The first revision of the artwork itself since the system was
+created.
+
+### Changed
+- `assets/logo/archetype-mark.svg` replaced with the new drawing. Heavier
+  strokes (15 and 30, against 10 and 20), a taller canvas, and a wider triangle.
+- **The aspect is now 1.19:1, not 1.24:1.** Anything sizing the mark by width
+  gets a different result. Consumers following the documented rule — set height,
+  let width follow — are unaffected. `logo.aspect` and
+  `assets.logo.mark.aspect` both move, and 1.24:1 joins 1.17:1 and 1.28:1 on the
+  list of stale figures to grep for.
+- The square mark, wordmark and lockup regenerated from it. The lockup canvas
+  moves 667×630 → 667×652, so its aspect goes 1.06:1 → 1.02:1.
+- §6 of the spec rewritten against the new geometry.
+
+### New in the drawing
+- **The triangle's base is now exactly the circle diameter** — 485 — with its
+  corners landing on the circle's left and right extremes. The previous revision
+  had no such relationship. It is the clearest single thing to check a future
+  redraw against.
+- The apex clears the arc by 37.5 and each base corner breaks through by 44.5.
+  The crossbar still runs the full width, now overhanging by 0.38r, and still
+  begins exactly at the circle's left extreme.
+- §6's rule that the circle stroke is exactly half the heaviest stroke still
+  holds at 15 against 30 — the build confirmed it rather than anyone checking.
+
+### Fixed
+- **The lockup never hit its declared proportions.** `logo.lockup.widthOfDiameter`
+  claimed 0.76 and nothing enforced it; the hand-set `fontSize: 58` rendered
+  0.728. The font size is now solved for from the diameter, so the lockup holds
+  its proportion whenever the mark is redrawn.
+- The metrics behind that were also wrong. `capHeightRatio` was declared 0.72
+  against a real 0.6758, and it was the wrong measurement to be using — the
+  visual gap is to the ink, not the cap line. Both ink metrics are now measured
+  from a real render.
+
+### Verified
+Rasterised at 3x with the Typekit faces loaded, ink read out of the pixels:
+wordmark width 0.756 of the diameter against a 0.760 target — the gap is
+sidebearings — and the mark-to-wordmark gap exactly 0.080. Nothing clipped.
+
 ## 1.2.1 — 2026-08-25
 
 Preconnect hints as a single-source value, and `font-display` recorded per

@@ -83,7 +83,7 @@ Full guidance: `../DESIGN-SYSTEM.md` §7.
 `../assets/logo/archetype-mark.svg`, on `currentColor` — set `color` on the
 parent to recolor, and inline it rather than using `<img>` so that works.
 
-**It is 1.24:1, not square.** Set height and let width follow. Use
+**It is 1.19:1, not square.** Set height and let width follow. Use
 `archetype-mark-square.svg` for favicons and app icons. Never clip the crossbar
 to the circle — the overhang is the mark's distinguishing move.
 
