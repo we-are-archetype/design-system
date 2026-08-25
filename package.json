@@ -1,0 +1,51 @@
+{
+  "name": "@archetype/design-system",
+  "version": "1.0.0",
+  "description": "Archetype brand design system. Tokens, spec, and generated outputs for Tailwind v4.",
+  "type": "module",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/we-are-archetype/design-system.git"
+  },
+  "homepage": "https://github.com/we-are-archetype/design-system#readme",
+  "main": "./build/tokens.js",
+  "exports": {
+    ".": "./build/tokens.js",
+    "./css": "./build/tokens.css",
+    "./css/bundled": "./build/tokens.bundled.css",
+    "./tokens.json": "./tokens.json",
+    "./spec": "./DESIGN-SYSTEM.md",
+    "./assets/*": "./assets/*",
+    "./lib/*": "./lib/*"
+  },
+  "files": [
+    "build",
+    "assets",
+    "docs",
+    "lib",
+    "skill",
+    "tokens.json",
+    "DESIGN-SYSTEM.md",
+    "DECISIONS.md",
+    "CHANGELOG.md",
+    "examples"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check",
+    "check:tag": "node scripts/build.mjs --tag",
+    "prepare": "node scripts/build.mjs",
+    "specimen": "node scripts/specimen.mjs"
+  },
+  "keywords": [
+    "design-system",
+    "design-tokens",
+    "tailwind",
+    "tailwindcss",
+    "archetype"
+  ],
+  "engines": {
+    "node": ">=22"
+  }
+}

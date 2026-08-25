@@ -1,0 +1,29 @@
+name: check
+on: [push, pull_request]
+
+jobs:
+  tokens:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '22' }
+
+      - name: Validate tokens
+        run: node scripts/build.mjs --check
+
+      # build/ is committed so consumers can install straight from a git tag
+      # without a build step. That only works if it is never stale.
+      - name: Rebuild and fail if build/ is out of date
+        run: |
+          node scripts/build.mjs
+          git diff --exit-code build/ || {
+            echo "::error::build/ is out of date. Run 'npm run build' and commit the result."
+            exit 1
+          }
+
+      # A tag and the version it publishes must agree, or anyone pinned to
+      # #v1.0.0 quietly installs something else.
+      - name: Version must match the tag
+        if: github.ref_type == 'tag'
+        run: node scripts/build.mjs --tag "$GITHUB_REF_NAME"
