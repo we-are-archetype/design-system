@@ -5,6 +5,30 @@ never a branch. A tag and `meta.version` in `tokens.json` must agree — CI
 enforces it, because a tag that publishes a different version means anyone
 pinned to it quietly installed something else.
 
+## 1.5.0 — 2026-08-25
+
+A verdigris surface, and the warm foreground that goes on it.
+
+### Added
+- `background-accent` — verdigris at full strength as a **surface**, light
+  `verdigris-700` and dark `verdigris-300`. The only full-strength verdigris the
+  system had was `action-accent-bg`, which is an action's ground; a navigation
+  panel or a section field is not an action, and borrowing that name for one
+  made the semantic layer say something untrue.
+- `text-on-accent-warm` — `bronze-100`, dark `bronze-900` — following the
+  `text-on-<surface>` convention already set by `text-on-tint-cool` and
+  `text-on-tint-warm`. It carries the **mark** as well as the type: the mark
+  reads `currentColor`, so the surface's foreground colours it with no second
+  asset, and 6.59:1 clears the 3:1 non-text minimum comfortably.
+
+### Changed
+- §1's warm-foreground exception now covers both uses rather than reading as a
+  one-off for the CTA hover. The rule is the same either way: where verdigris is
+  the ground, bronze may be the foreground; it is still barred from every fill.
+- The two contrast minimums added in 1.4.0 now state that they govern both, so
+  neither use can drift without the build noticing. No values move — the pairs
+  are identical, which is why no new rule was needed.
+
 ## 1.4.0 — 2026-08-25
 
 A named hover for the outline action, and the fill check corrected to test

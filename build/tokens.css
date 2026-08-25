@@ -1,7 +1,7 @@
 /* Archetype design tokens — Tailwind v4 theme.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.4.0
+   @archetype/design-system v1.5.0
 */
 
 /* CONTRACT: the consumer imports tailwindcss FIRST, then this file. This file
@@ -58,6 +58,7 @@
   --color-background-secondary:  var(--color-stone-100);
   --color-background-sunken:     var(--color-stone-200);
   --color-background-inverse:    var(--color-stone-900);
+  --color-background-accent:     var(--color-verdigris-700);
   --color-surface-tint-cool:     var(--color-verdigris-100);
   --color-surface-tint-warm:     var(--color-bronze-100);
   --color-text-primary:          var(--color-stone-900);
@@ -72,6 +73,7 @@
   --color-text-link-hover:       var(--color-verdigris-900);
   --color-text-on-tint-cool:     var(--color-verdigris-900);
   --color-text-on-tint-warm:     var(--color-bronze-900);
+  --color-text-on-accent-warm:   var(--color-bronze-100);
   --color-border-subtle:         var(--color-stone-200);
   --color-border-strong:         var(--color-stone-300);
   --color-border-emphasis:       var(--color-stone-400);
@@ -230,6 +232,7 @@
   --color-background-secondary:  var(--color-stone-800);
   --color-background-sunken:     var(--color-stone-700);
   --color-background-inverse:    var(--color-stone-50);
+  --color-background-accent:     var(--color-verdigris-300);
   --color-surface-tint-cool:     var(--color-verdigris-900);
   --color-surface-tint-warm:     var(--color-bronze-900);
   --color-text-primary:          var(--color-stone-100);
@@ -244,6 +247,7 @@
   --color-text-link-hover:       var(--color-verdigris-100);
   --color-text-on-tint-cool:     var(--color-verdigris-100);
   --color-text-on-tint-warm:     var(--color-bronze-100);
+  --color-text-on-accent-warm:   var(--color-bronze-900);
   --color-border-subtle:         var(--color-stone-700);
   --color-border-strong:         var(--color-stone-600);
   --color-border-emphasis:       var(--color-stone-500);

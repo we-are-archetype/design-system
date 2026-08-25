@@ -99,12 +99,19 @@ the distinction is recorded rather than assumed.
 prominent turns the brand corporate-luxury, which is the failure mode.
 `bronze-500` on `stone-100` lands at exactly 3.00:1; never set type there.
 
-### The one warm foreground: an outline action's hover
+### The warm foreground on a verdigris ground
 
-The exception, and the only one: an outline action fills with verdigris on hover
-and sets its **label** warm. `action-secondary-bg-hover` and
-`action-secondary-fg-hover` name that pair. Bronze here is a foreground on an
-accent fill, not a fill — the distinction §1 has always drawn, now expressible.
+The exception: where verdigris is the ground, bronze may be the **foreground**.
+Two places name it — `action-secondary-bg-hover` / `action-secondary-fg-hover`
+for an outline action's hover, and `background-accent` / `text-on-accent-warm`
+for a verdigris surface such as the mobile navigation panel. Bronze here is a
+foreground on an accent ground, not a fill — the distinction §1 has always
+drawn, now expressible.
+
+On `background-accent` the warm foreground carries the **mark** as well as the
+type. The mark reads `currentColor`, so setting the surface's foreground colours
+it with no second asset, and at 6.59:1 it clears the 3:1 minimum non-text
+contrast asks of a graphic with room to spare.
 
 The value is forced by contrast, not chosen. Against `verdigris-700`, the
 brand's actual gold `bronze-700` measures **1.41:1** and `bronze-500` **2.47:1** —
@@ -526,7 +533,7 @@ emoji. Stroke 1.5 on a 24px grid.
 ### Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.4.0   # pin a tag, never a branch
+npm i github:we-are-archetype/design-system#v1.5.0   # pin a tag, never a branch
 ```
 
 `build/` is committed, so a git install needs no build step.

@@ -1,7 +1,7 @@
 /* Archetype design tokens — type declarations.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.4.0
+   @archetype/design-system v1.5.0
 */
 
 export type ColorName =
@@ -31,6 +31,7 @@ export type SemanticName =
   | "background-secondary"
   | "background-sunken"
   | "background-inverse"
+  | "background-accent"
   | "surface-tint-cool"
   | "surface-tint-warm"
   | "text-primary"
@@ -45,6 +46,7 @@ export type SemanticName =
   | "text-link-hover"
   | "text-on-tint-cool"
   | "text-on-tint-warm"
+  | "text-on-accent-warm"
   | "border-subtle"
   | "border-strong"
   | "border-emphasis"

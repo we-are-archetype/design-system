@@ -1,14 +1,14 @@
 /* Archetype design tokens — JavaScript.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.4.0
+   @archetype/design-system v1.5.0
 */
 // For anything that cannot read CSS: document pipelines, canvas rendering,
 // email templates, PDF generation, Figma sync.
 
 export const meta = {
   "name": "@archetype/design-system",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "spec": "DESIGN-SYSTEM.md",
   "note": "This file is the only place a value is typed. Everything in build/ is generated from it by scripts/build.mjs. DESIGN-SYSTEM.md carries prose rules and references tokens by name, never by value. If a hex appears in two places, one of them is wrong."
 };
@@ -43,6 +43,7 @@ export const semantic = {
   "background-secondary": "#F1EEE8",
   "background-sunken": "#E3DED4",
   "background-inverse": "#1A1816",
+  "background-accent": "#2E5349",
   "surface-tint-cool": "#DCE6E2",
   "surface-tint-warm": "#EDE0CC",
   "text-primary": "#1A1816",
@@ -57,6 +58,7 @@ export const semantic = {
   "text-link-hover": "#1B342E",
   "text-on-tint-cool": "#1B342E",
   "text-on-tint-warm": "#4A361E",
+  "text-on-accent-warm": "#EDE0CC",
   "border-subtle": "#E3DED4",
   "border-strong": "#CFC8BC",
   "border-emphasis": "#A8A199",
@@ -92,6 +94,7 @@ export const semanticDark = {
   "background-secondary": "#2B2724",
   "background-sunken": "#45403B",
   "background-inverse": "#FAF8F5",
+  "background-accent": "#8FAFA5",
   "surface-tint-cool": "#1B342E",
   "surface-tint-warm": "#4A361E",
   "text-primary": "#F1EEE8",
@@ -106,6 +109,7 @@ export const semanticDark = {
   "text-link-hover": "#DCE6E2",
   "text-on-tint-cool": "#DCE6E2",
   "text-on-tint-warm": "#EDE0CC",
+  "text-on-accent-warm": "#4A361E",
   "border-subtle": "#45403B",
   "border-strong": "#635C55",
   "border-emphasis": "#877F76",

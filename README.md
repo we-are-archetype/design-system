@@ -21,7 +21,7 @@ never by value. If a hex appears in two places, one of them is wrong.
 ## Starting a new consumer
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.4.0   # pin a tag, never a branch
+npm i github:we-are-archetype/design-system#v1.5.0   # pin a tag, never a branch
 ```
 
 ```css
