@@ -51,44 +51,6 @@ their proxies.
   narrower. Anything with a hand-placed `<br>` needs re-judging.
 - Outlining the two live-text SVGs would remove the exception permanently.
 
-## 1.1.0 — 2026-08-25
-
-The production faces. `font.use` moves from `"proxy"` to `"production"`, so the
-stacks name `neue-haas-grotesk-display`, `neue-haas-grotesk-text` and
-`freight-text-pro`.
-
-**Consumers must link the Adobe Fonts kit.** The web project is bound to a
-domain, so the package declares the faces and cannot serve them. A consumer that
-forgets the stylesheet renders the whole system in Helvetica and Georgia — the
-fastest way to notice is that body copy stops being serif.
-
-### Added
-- `font.kit` in `tokens.json` — the web project's id, url, host, and the weights
-  it ships per family. Consumers read `font.kit.url` rather than typing it.
-- `font` export in `build/tokens.js`, carrying the stacks in force and the kit.
-- A thirteenth build check: every weight a type role uses must be present in the
-  kit. A missing weight does not error in a browser, it synthesises one — which
-  is how a system quietly starts rendering faux-bold.
-- `build/tokens.css` emits the required `<link>` as a comment in production mode,
-  in place of the proxy `@font-face` block.
-
-### Changed
-- `archetype-wordmark.svg` and `archetype-lockup.svg` now name
-  `neue-haas-grotesk-display` in their live text. These two files are §2's
-  irreducible exception and have to move with the swap; outlining them removes
-  the exception permanently.
-- `DESIGN-SYSTEM.md` §2, `README.md`, `docs/consumers/astro.md` and
-  `examples/specimen.html` rewritten around the kit being a consumer
-  requirement rather than a future step.
-
-### Known limits, flagged rather than hidden
-- The kit serves `font-display: auto`, which blocks text while the faces load.
-  It is a per-project setting in the Adobe Fonts UI and cannot be overridden
-  from the URL — a `?display=` parameter is ignored. Set it to `swap` there and
-  update `font.kit.fontDisplay`.
-- `font.use` can return to `"proxy"` for a fork, a sandbox, or any domain the
-  web project does not cover. Archivo and Source Serif 4 remain as that path.
-
 ## 1.0.0 — 2026-08-25
 
 First release. Ported from the Archetype design system authored in Claude
