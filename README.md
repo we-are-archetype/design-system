@@ -175,6 +175,7 @@ scripts/build.mjs      generator and validator, no dependencies
 lib/contrast.mjs       WCAG maths, shared so one ratio has one answer
 build/tokens.css       generated: Tailwind v4 @theme, dark block, role classes
 build/tokens.js        generated: resolved values for non-CSS pipelines
+build/tokens.d.ts      generated: declarations, with literal key unions
 assets/logo/           logo SVG sources, all on currentColor
 docs/consumers/        worked setups for consuming projects
 skill/SKILL.md         portable agent skill

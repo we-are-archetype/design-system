@@ -5,6 +5,17 @@ never a branch. A tag and `meta.version` in `tokens.json` must agree — CI
 enforces it, because a tag that publishes a different version means anyone
 pinned to it quietly installed something else.
 
+## 1.1.1 — 2026-08-25
+
+### Added
+- `build/tokens.d.ts`, generated alongside `tokens.js`, and a `types` entry in
+  the package exports. Without declarations, importing this package under a
+  strict tsconfig is an implicit `any` — an error, not a warning — which the
+  website hit the moment it read `font.kit.url`.
+- `ColorName`, `SemanticName`, `RoleName` and `SpaceStep` are literal unions
+  generated from the same source as the values, so `semantic["backgruond-primary"]`
+  fails at the keystroke rather than resolving to `undefined` at runtime.
+
 ## 1.1.0 — 2026-08-25
 
 The production typefaces. `font.use` is now `"production"`, so the system

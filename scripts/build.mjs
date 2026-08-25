@@ -553,6 +553,83 @@ export const pxToHalfPt = (px) => Math.round((px * 0.75) * 2);
 export const pxToTwips = (px) => Math.round(px * 15);
 `;
 
+// --- build/tokens.d.ts ---
+// Without declarations, importing this package under a strict tsconfig is an
+// implicit `any` — an error, not a warning. The key unions are generated from
+// the same source as the values, so a typo in semantic["backgruond-primary"]
+// fails at the keystroke rather than resolving to undefined at runtime.
+const union = (keys) => keys.map((k) => `"${k}"`).join("\n  | ");
+
+const dts = `${banner("Archetype design tokens — type declarations.")}
+
+export type ColorName =
+  ${union(colorNames)};
+
+export type SemanticName =
+  ${union(realKeys(T.semantic))};
+
+export type RoleName =
+  ${union(realKeys(T.role))};
+
+export type SpaceStep =
+  ${union(realKeys(T.space))};
+
+export interface Meta {
+  name: string;
+  version: string;
+  spec: string;
+  note: string;
+}
+
+export interface Role {
+  /** px */
+  fontSize: number;
+  lineHeight: number;
+  /** em, or "0" */
+  letterSpacing: string;
+  fontWeight: number;
+  /** Which optical cut the role uses. */
+  cut: "display" | "text" | "serif";
+  /** The resolved family stack. */
+  family: string;
+  /** The default colour pairing, as hex. */
+  color: string;
+  textTransform?: string;
+}
+
+export interface Font {
+  use: "proxy" | "production";
+  display: string;
+  text: string;
+  serif: string;
+  mono: string;
+  /** Present only when \`use\` is "production". The consumer must link kit.url. */
+  kit?: { id: string; url: string; host: string };
+}
+
+export const meta: Meta;
+export const color: Record<ColorName, string>;
+export const semantic: Record<SemanticName, string>;
+export const semanticDark: Record<SemanticName, string>;
+export const role: Record<RoleName, Role>;
+export const font: Font;
+export const space: Record<SpaceStep, number>;
+export const radius: Record<string, string>;
+export const shadow: Record<string, string>;
+export const motion: {
+  duration: Record<string, string>;
+  ease: Record<string, string>;
+};
+export const logo: Record<string, unknown>;
+export const palette: { ratio: Record<string, number> };
+
+/** px → half-points, for docx pipelines. */
+export function pxToHalfPt(px: number): number;
+
+/** px → twips, for docx geometry. */
+export function pxToTwips(px: number): number;
+`;
+
 // --- barred values check, on the generated output rather than the source ---
 // Declarations only. Prose is allowed to name a barred value — the rule against
 // pure white is worth stating in the file it governs, and the first version of
@@ -593,6 +670,7 @@ mkdirSync(join(ROOT, "build"), { recursive: true });
 writeFileSync(join(ROOT, "build/tokens.css"), css);
 writeFileSync(join(ROOT, "build/tokens.bundled.css"), bundled);
 writeFileSync(join(ROOT, "build/tokens.js"), js);
+writeFileSync(join(ROOT, "build/tokens.d.ts"), dts);
 
-console.log(`\nWrote build/tokens.css, build/tokens.bundled.css, build/tokens.js`);
+console.log(`\nWrote build/tokens.css, build/tokens.bundled.css, build/tokens.js, build/tokens.d.ts`);
 console.log(`${colorNames.length} colors, ${realKeys(T.semantic).length} semantic, ${realKeys(T.role).length} roles, families: ${T.font.use}.`);

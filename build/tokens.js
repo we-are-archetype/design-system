@@ -1,14 +1,14 @@
 /* Archetype design tokens — JavaScript.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.1.0
+   @archetype/design-system v1.1.1
 */
 // For anything that cannot read CSS: document pipelines, canvas rendering,
 // email templates, PDF generation, Figma sync.
 
 export const meta = {
   "name": "@archetype/design-system",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "spec": "DESIGN-SYSTEM.md",
   "note": "This file is the only place a value is typed. Everything in build/ is generated from it by scripts/build.mjs. DESIGN-SYSTEM.md carries prose rules and references tokens by name, never by value. If a hex appears in two places, one of them is wrong."
 };

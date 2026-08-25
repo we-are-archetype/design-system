@@ -1,7 +1,7 @@
 /* Archetype design tokens — Tailwind v4 theme.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.1.0
+   @archetype/design-system v1.1.1
 */
 
 /* CONTRACT: the consumer imports tailwindcss FIRST, then this file. This file
