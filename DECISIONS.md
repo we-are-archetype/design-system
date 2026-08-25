@@ -11,6 +11,58 @@ Newest first.
 
 ---
 
+## 2026-08-25 — The kit is the consumer's job, and the URL is not
+
+**Decision:** `font.use` moves to `"production"`. The consumer links the Adobe
+Fonts kit stylesheet; the package exports `font.kit.url` so nobody types it.
+
+**Why the consumer links it:** an Adobe Fonts web project is authorised per
+domain. A package cannot carry that — bundling the kit would make the design
+system undeployable anywhere the project does not cover, including forks and
+sandboxes. So the faces are declared here and served there.
+
+**Why the URL still lives here:** "the consumer loads the fonts" is a
+responsibility, not a value. The value — `https://use.typekit.net/npe3lvr.css` —
+is exactly the kind of string that gets pasted into four layouts and then
+changes. It is typed once, in `tokens.json`, and read from `font.kit.url`.
+
+**The cost, stated plainly:** this is the one way to consume the system wrong
+that produces no error. Miss the `<link>` and every stack falls through to its
+fallback; the site renders in Helvetica and Georgia and nothing warns you. The
+mitigations are a comment at the top of the generated CSS where the `@font-face`
+block used to be, and making it the second item in the astro guide's "checking
+it worked" list. Neither is enforcement. An `@import` inside the system's CSS
+*would* be enforcement, and was rejected: it chains a stylesheet request behind
+another stylesheet request, which is measurably worse on first paint than a
+`<link>` in the head.
+
+**Kept, not deleted:** the proxy stacks. `font.use` flips back to `"proxy"` and
+the package serves Archivo and Source Serif 4 itself. A design system that only
+renders on authorised domains is one nobody can fork or prototype against.
+
+**Files:** `tokens.json` `font.kit`, `scripts/build.mjs`, `DESIGN-SYSTEM.md` §2 §9
+
+---
+
+## 2026-08-25 — The kit's weight coverage is checked
+
+**Decision:** `font.kit.provides` records the weights each family actually
+ships, and the build fails if a type role needs one that is missing.
+
+**Why:** a missing weight does not error in a browser. It synthesises one —
+faux-bold, algorithmically slanted — which looks approximately right at a glance
+and is wrong everywhere. There is no runtime signal, so the check has to be at
+build time or it does not exist.
+
+**What it caught nothing of, yet:** the kit currently ships every weight the
+system uses (400 and 500 for both sans cuts, 400 for the serif). The check earns
+its place the day someone tidies unused weights out of the Adobe project, which
+is a reasonable thing to do and a silent break.
+
+**Files:** `tokens.json` `font.kit.provides`, `scripts/build.mjs`
+
+---
+
 ## 2026-08-25 — The system moves to a tokens.json pipeline
 
 **Decision:** `tokens.json` becomes the only place a value is typed. The seven

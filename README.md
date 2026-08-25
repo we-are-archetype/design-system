@@ -21,7 +21,7 @@ never by value. If a hex appears in two places, one of them is wrong.
 ## Starting a new consumer
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.0.0   # pin a tag, never a branch
+npm i github:we-are-archetype/design-system#v1.1.0   # pin a tag, never a branch
 ```
 
 ```css
@@ -87,19 +87,39 @@ spec, and most of it is enforced by the build.
 - **Fades only.** No bounce, no spring, no parallax.
 - **No emoji, anywhere, on any surface.**
 
-## Fonts ship as proxies
+## Fonts — every consumer must load the kit
 
-Neue Haas Grotesk and Freight Text Pro are Adobe Fonts and need a Creative Cloud
-web project ID tied to a domain — which belongs to the consuming build, not to
-this package. The system runs on **Archivo** and **Source Serif 4**, self-hosted
-from the Fontsource CDN.
+The system ships the production faces: **Neue Haas Grotesk** in two optical cuts
+and **Freight Text Pro**. They come from an Adobe Fonts web project, which is
+bound to a domain — so this package declares them and cannot serve them.
 
-The swap is a single point: three declarations under `font` in `tokens.json`.
-Set `font.use` to `"production"`, rebuild, and add your Adobe Fonts `<link>` in
-the consumer. Nothing else changes — no role, token or component names a family.
+**Link the kit stylesheet, or the whole system renders in Helvetica and
+Georgia.**
 
-The one exception is the two SVGs that carry live text. See
-[§2](DESIGN-SYSTEM.md#2-typography).
+```html
+<link rel="stylesheet" href="https://use.typekit.net/npe3lvr.css">
+```
+
+Read the URL from the package rather than typing it:
+
+```js
+import { font } from "@archetype/design-system";
+font.kit.url;   // "https://use.typekit.net/npe3lvr.css"
+```
+
+The build checks the kit ships every weight the roles use. A missing weight does
+not error in a browser — it synthesises one, which is how a system quietly
+starts rendering faux-bold.
+
+**One setting still to change:** the kit serves `font-display: auto`, which
+blocks text while the faces load. It is a per-project setting in the Adobe Fonts
+UI and cannot be overridden from the URL. Set it to `swap` there.
+
+`font.use` can go back to `"proxy"` — **Archivo** and **Source Serif 4**,
+self-hosted — to render the system anywhere the kit is not authorised. The swap
+is three declarations under `font` in `tokens.json`; no role, token or component
+names a family. The one exception is the two SVGs that carry live text, and the
+build fails if they drift. See [§2](DESIGN-SYSTEM.md#2-typography).
 
 ## Build
 
@@ -127,6 +147,9 @@ The validator encodes the failure modes a system like this actually has:
 - A third reading size appearing
 - A retired name coming back as a live token
 - Pure white or pure black reaching a generated declaration
+- The Adobe kit not shipping a weight the type roles use
+- The two live-text SVGs naming a family the system is no longer set to
+- `font.use` naming a stack that does not exist
 
 Change a value and the build tells you which piece of the interface just stopped
 being legible, with the ratio.

@@ -6,7 +6,7 @@ runs. Astro 7, Tailwind v4 through the Vite plugin, this system pinned to a tag.
 ## Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.0.0
+npm i github:we-are-archetype/design-system#v1.1.0
 npm i -D tailwindcss @tailwindcss/vite
 ```
 
@@ -153,23 +153,45 @@ Use `archetype-mark-square.svg` for favicons. The primary mark is **1.24:1, not
 square**, and squashing it into a square viewport is the most common way this
 brand gets broken.
 
-## The real typefaces
+## The typefaces — required
 
-The system ships proxies. When the Adobe Fonts web project exists, add its link
-to the layout `<head>`:
+The system declares the production faces but cannot serve them: the Adobe Fonts
+web project is bound to a domain. **Link the kit in the layout `<head>`, or the
+whole site renders in Helvetica and Georgia.**
 
-```html
-<link rel="stylesheet" href="https://use.typekit.net/YOUR_KIT_ID.css" />
+Import the URL from the package rather than typing it, so it stays a
+single-source value:
+
+```astro
+---
+// src/layouts/Base.astro
+import { font } from "@archetype/design-system";
+---
+<head>
+  <link rel="preconnect" href={font.kit.host} crossorigin />
+  <link rel="stylesheet" href={font.kit.url} />
+</head>
 ```
 
-Then set `font.use` to `"production"` in `tokens.json`, rebuild, and cut a new
-tag. The consumer changes nothing except that `<link>`.
+The `preconnect` warms the TLS handshake to `use.typekit.net` while the HTML is
+still parsing, which is worth a round trip on first paint.
 
-## Fonts and the CDN
+### Set font-display in the Adobe project
 
-The proxy faces load from the Fontsource CDN, which means a third-party request
-on first paint. If that is not acceptable — a strict CSP, an offline build, or
-a measurable LCP cost — self-host instead:
+The kit currently serves `font-display: auto`, so text is invisible while the
+faces load rather than showing a fallback. It is a per-project setting in the
+Adobe Fonts web project UI and **cannot be overridden from the URL** — appending
+`?display=swap` is silently ignored. Change it there.
+
+### Running without the kit
+
+`font.use` in the design system can go back to `"proxy"` — Archivo and Source
+Serif 4, served by the package itself — for a fork, a sandbox, or any domain the
+web project does not cover. In that mode nothing needs linking, and `font.kit`
+is not exported.
+
+The proxy faces load from the Fontsource CDN. If a third-party request is not
+acceptable there — a strict CSP, an offline build — self-host instead:
 
 ```bash
 npm i @fontsource/archivo @fontsource-variable/source-serif-4
@@ -185,7 +207,7 @@ npm i @fontsource/archivo @fontsource-variable/source-serif-4
 ```
 
 The `@font-face` rules in the system are additive, so the local files win on
-being already present. This becomes moot once the Adobe kit is wired in.
+being already present.
 
 ## Checking it worked
 
@@ -197,8 +219,10 @@ Three things to look at, in order:
 
 1. **The page ground is `#FAF8F5`, not white.** If it is white, the stylesheet
    is not loading or something is overriding it below the import.
-2. **Body copy is serif.** If it is sans, you used `text-body` without
-   `font-serif`. The role class `.type-body` sets the family itself and cannot
-   have this problem, which is the reason to prefer it.
+2. **Body copy is serif, and headings are Neue Haas rather than Helvetica.** If
+   everything is Helvetica and Georgia, the kit `<link>` is missing — that is
+   the single most likely mistake. If only the body is sans, you used
+   `text-body` without `font-serif`; the role class `.type-body` sets the family
+   itself and cannot have that problem, which is the reason to prefer it.
 3. **A `data-theme="dark"` element inverts.** If it does not, the system CSS is
    loading after something that redeclares the same custom properties.

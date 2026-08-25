@@ -9,7 +9,7 @@
 /* Archetype design tokens — Tailwind v4 theme.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.0.0
+   @archetype/design-system v1.1.0
 */
 
 /* CONTRACT: the consumer imports tailwindcss FIRST, then this file. This file
@@ -17,13 +17,17 @@
    not both. Load order decides which values survive: last wins, so this goes
    after any dependency that declares the same names and before your overrides. */
 
-/* Proxy faces. Adobe Fonts require a Creative Cloud web project ID tied to a domain, so the real faces belong to the consuming build, not to this package. */
-@font-face{font-family:'Archivo';font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/archivo@latest/latin-400-normal.woff2) format('woff2')}
-@font-face{font-family:'Archivo';font-style:normal;font-weight:500;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/archivo@latest/latin-500-normal.woff2) format('woff2')}
-@font-face{font-family:'Archivo';font-style:normal;font-weight:700;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/archivo@latest/latin-700-normal.woff2) format('woff2')}
-@font-face{font-family:'Source Serif 4';font-style:normal;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/source-serif-4@latest/latin-400-normal.woff2) format('woff2')}
-@font-face{font-family:'Source Serif 4';font-style:italic;font-weight:400;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/source-serif-4@latest/latin-400-italic.woff2) format('woff2')}
-@font-face{font-family:'Source Serif 4';font-style:normal;font-weight:600;font-display:swap;src:url(https://cdn.jsdelivr.net/fontsource/fonts/source-serif-4@latest/latin-600-normal.woff2) format('woff2')}
+/* REQUIRED: this file declares the production faces but cannot serve them.
+   The Adobe Fonts web project is bound to a domain, so the consumer loads it:
+
+     <link rel="stylesheet" href="https://use.typekit.net/npe3lvr.css">
+
+   Import the URL from this package rather than typing it —
+   `import { font } from "@archetype/design-system"` → `font.kit.url`.
+
+   Without that stylesheet every stack falls through to its fallback and the
+   whole system renders in Helvetica and Georgia. The fastest way to notice is
+   that body copy stops being serif. */
 
 @theme static {
 
@@ -102,11 +106,11 @@
   --color-surface-overlay-dark:  rgba(26,24,22,0.72);
 
   /* ---------- families ---------- */
-  /* THE SWAP POINT — currently "proxy". Three declarations, and all
+  /* THE SWAP POINT — currently "production". Three declarations, and all
      13 roles derive from them. Nothing else names a family. */
-  --font-display:                Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-text:                   Archivo, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  --font-serif:                  "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-display:                "neue-haas-grotesk-display", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-text:                   "neue-haas-grotesk-text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif:                  "freight-text-pro", Georgia, "Times New Roman", serif;
   --font-sans:                   var(--font-text);
   --font-mono:                   ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
@@ -418,7 +422,7 @@ body, p, blockquote, li {
   <header>
     <span class="mark"><svg xmlns="http://www.w3.org/2000/svg" width="667" height="540" viewBox="0 0 667 540" fill="none"><path d="M342.16 35.0009L558.66 410.001L567.32 425.001H99.6797L108.34 410.001L324.84 35.0009L333.5 20.0009L342.16 35.0009Z" stroke="currentColor" stroke-width="20"></path><circle cx="333.5" cy="290.001" r="245" stroke="currentColor" stroke-width="10"></circle><path d="M655.966 280.001L667 300.001H0L11.0177 280.001L655.966 280.001Z" fill="currentColor"></path></svg></span>
     <h1 class="type-display-md">Specimen</h1>
-    <p class="type-body">Every token at actual size. Generated from <code>tokens.json</code> — @archetype/design-system v1.0.0. Contrast ratios are measured by the same maths the build enforces.</p>
+    <p class="type-body">Every token at actual size. Generated from <code>tokens.json</code> — @archetype/design-system v1.1.0. Contrast ratios are measured by the same maths the build enforces.</p>
   </header>
 
   <section>

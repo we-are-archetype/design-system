@@ -185,7 +185,98 @@ for (const key of ["gutter", "section-pad-y"]) {
   }
 }
 
+// 13. The font stacks the system is currently set to, and — when those are the
+//     production faces — the Adobe kit that actually serves them.
+{
+  const mode = T.font.use;
+  if (!T.font[mode] || !["proxy", "production"].includes(mode)) {
+    fail(`font.use is "${mode}". It must be "proxy" or "production".`);
+  }
+
+  if (mode === "production") {
+    const kit = T.font.kit;
+    if (!kit?.url) {
+      fail(`font.use is "production" but font.kit declares no url. Consumers have no way to load the faces.`);
+    } else {
+      // Which family each optical cut resolves to, taken from the stack itself
+      // rather than assumed — the first name in the stack is the one the kit
+      // has to serve, and everything after it is a fallback.
+      const primary = (stack) => (stack.match(/^\s*"?([^",]+)"?/) || [, ""])[1].trim();
+      const familyForCut = {
+        display: primary(T.font.production.display),
+        text: primary(T.font.production.text),
+        serif: primary(T.font.production.serif),
+      };
+
+      // Every weight the roles actually use must exist in the kit. A missing
+      // weight does not error in a browser — it synthesises one, which is how a
+      // system silently starts rendering faux-bold.
+      const needed = new Map();
+      for (const [name, role] of Object.entries(T.role)) {
+        if (name.startsWith("_")) continue;
+        const family = familyForCut[role.cut];
+        if (!needed.has(family)) needed.set(family, new Set());
+        needed.get(family).add(T.weight[role.weight]);
+      }
+
+      for (const [family, weights] of needed) {
+        const has = kit.provides?.[family];
+        if (!has) {
+          fail(`font.kit does not list "${family}", which the ${[...needed.keys()].indexOf(family) >= 0 ? "production stacks" : "system"} resolve to.`);
+          continue;
+        }
+        for (const w of [...weights].sort((a, b) => a - b)) {
+          if (!has.includes(w)) {
+            fail(`kit family "${family}" does not ship weight ${w}, which a type role uses. The browser would synthesise it.`);
+          }
+        }
+        notes.push(`  kit ${family.padEnd(26)} needs ${[...weights].sort((a, b) => a - b).join(", ")}  ✓`);
+      }
+    }
+  }
+}
+
+// 14. The two SVGs that hard-code a family still name the one in force. An SVG
+//     loaded through <img> cannot read a custom property, so the exception
+//     cannot be removed without outlining the text — but it can be kept honest.
+{
+  const { files, cut } = T.assets.liveText;
+  const stack = T.font[T.font.use];
+  if (stack) {
+    const want = (stack[cut].match(/^\s*"?([^",]+)"?/) || [, ""])[1].trim();
+    for (const rel of files) {
+      let svg;
+      try {
+        svg = readFileSync(join(ROOT, rel), "utf8");
+      } catch {
+        fail(`assets.liveText names ${rel}, which does not exist.`);
+        continue;
+      }
+      const declared = svg.match(/font-family="([^"]+)"/);
+      if (!declared) {
+        fail(`${rel} is listed as carrying live text but declares no font-family.`);
+      } else if (!declared[1].startsWith(want)) {
+        fail(`${rel} sets font-family "${declared[1].split(",")[0]}" but the system is on "${want}". ${T.assets.outlineNote}`);
+      }
+    }
+  }
+}
+
 // ── generate ──────────────────────────────────────────────────────────────────
+
+/** Print collected errors and stop. */
+const bail = () => {
+  console.error(`\n${errors.length} problem${errors.length > 1 ? "s" : ""} in tokens.json:\n`);
+  for (const e of errors) console.error(`  ✗ ${e}`);
+  console.error("");
+  process.exit(1);
+};
+
+// Everything below derives from the selected font stacks, so a bad font.use
+// cannot be carried into generation. Reported here rather than at the end,
+// because the generator would otherwise crash on undefined with a stack trace
+// instead of saying which key is wrong.
+if (!T.font[T.font.use]) bail();
 
 const fam = T.font[T.font.use];
 const familyFor = (cut) => (cut === "serif" ? "var(--font-serif)" : cut === "display" ? "var(--font-display)" : "var(--font-text)");
@@ -206,14 +297,27 @@ let css = `${banner("Archetype design tokens — Tailwind v4 theme.")}
 
 `;
 
-// font faces (proxy only)
+// Faces. In proxy mode the package serves them itself; in production the Adobe
+// kit does, and the package cannot — the web project is bound to a domain.
 if (T.font.use === "proxy") {
-  css += `/* Proxy faces. ${T.font.proxy._note.split(".")[0]}. */\n`;
+  css += `/* Proxy faces, served by this package. */\n`;
   for (const f of T.font.webfont.faces) {
     const url = `${T.font.webfont.host}/${f.slug}@latest/latin-${f.weight}-${f.style}.woff2`;
     css += `@font-face{font-family:'${f.family}';font-style:${f.style};font-weight:${f.weight};font-display:swap;src:url(${url}) format('woff2')}\n`;
   }
   css += `\n`;
+} else {
+  css += `/* REQUIRED: this file declares the production faces but cannot serve them.
+   The Adobe Fonts web project is bound to a domain, so the consumer loads it:
+
+     <link rel="stylesheet" href="${T.font.kit.url}">
+
+   Import the URL from this package rather than typing it —
+   \`import { font } from "@archetype/design-system"\` → \`font.kit.url\`.
+
+   Without that stylesheet every stack falls through to its fallback and the
+   whole system renders in Helvetica and Georgia. The fastest way to notice is
+   that body copy stops being serif. */\n\n`;
 }
 
 css += `@theme static {\n\n`;
@@ -418,6 +522,23 @@ export const semanticDark = ${JSON.stringify(jsSemanticDark, null, 2)};
 /** The ${realKeys(T.role).length} type roles, fully resolved. */
 export const role = ${JSON.stringify(jsRole, null, 2)};
 
+/** Font stacks in force, plus the Adobe kit that serves them.
+ *  Consumers link \`font.kit.url\` rather than typing it — see build/tokens.css. */
+export const font = ${JSON.stringify(
+  {
+    use: T.font.use,
+    display: fam.display,
+    text: fam.text,
+    serif: fam.serif,
+    mono: T.font.mono,
+    ...(T.font.use === "production" && T.font.kit
+      ? { kit: { id: T.font.kit.id, url: T.font.kit.url, host: T.font.kit.host } }
+      : {}),
+  },
+  null,
+  2
+)};
+
 export const space = ${JSON.stringify(T.space, null, 2)};
 export const radius = ${JSON.stringify(T.radius, null, 2)};
 export const shadow = ${JSON.stringify(T.shadow, null, 2)};
@@ -458,12 +579,7 @@ if (TAG) {
   process.exit(0);
 }
 
-if (errors.length) {
-  console.error(`\n${errors.length} problem${errors.length > 1 ? "s" : ""} in tokens.json:\n`);
-  for (const e of errors) console.error(`  ✗ ${e}`);
-  console.error("");
-  process.exit(1);
-}
+if (errors.length) bail();
 
 console.log(`Contrast, all declared minimums:`);
 for (const n of notes) console.log(n);

@@ -94,7 +94,17 @@ page needs no `dark:` variants and no second token set.
 
 ## Fonts
 
-The system ships proxies — Archivo for Neue Haas Grotesk, Source Serif 4 for
-Freight Text Pro, because the real faces are Adobe Fonts and need a domain-bound
-kit. Display line breaks and the two sans optical cuts therefore cannot be
-judged by eye yet. Do not "fix" a headline's line breaks against the proxy.
+Neue Haas Grotesk (two optical cuts) and Freight Text Pro, from a domain-bound
+Adobe Fonts kit. The system declares them but cannot serve them — **any page you
+build must link the kit**, or it renders in Helvetica and Georgia:
+
+```html
+<link rel="stylesheet" href="https://use.typekit.net/npe3lvr.css">
+```
+
+That includes throwaway HTML artifacts and mocks. It is the single most common
+way a page built from this system looks wrong.
+
+The kit only works on authorised domains. Anywhere else, set `font.use` to
+`"proxy"` in the design system and rebuild — Archivo and Source Serif 4 stand in
+and the package serves them itself.

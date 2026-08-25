@@ -207,30 +207,71 @@ independently addressable — that separation is exactly what makes the 27/20
 boundary enforceable. Two typefaces, three family strings; collapsing them gives
 up the optical distinction.
 
-**The system currently ships proxies.** Neue Haas Grotesk and Freight Text Pro
-are Adobe Fonts and need a Creative Cloud web project ID tied to a domain, which
-belongs to the consuming build rather than to this package. **Archivo** stands
-in for Neue Haas and **Source Serif 4** for Freight, self-hosted from the
-Fontsource CDN. To move to production, set `font.use` to `"production"` in
-`tokens.json`, rebuild, and add your Adobe Fonts `<link>` in the consumer.
+**The system ships the production faces.** `font.use` is `"production"`, so the
+stacks name `neue-haas-grotesk-display`, `neue-haas-grotesk-text` and
+`freight-text-pro`.
+
+### The consumer must load the kit
+
+The faces come from an Adobe Fonts web project, which is bound to a domain — so
+this package declares them and cannot serve them. **Every consumer links the kit
+stylesheet, and a consumer that forgets it renders the entire system in
+Helvetica and Georgia.**
+
+```html
+<link rel="stylesheet" href="https://use.typekit.net/npe3lvr.css">
+```
+
+Read the URL from the package rather than typing it, so it stays a single-source
+value like everything else:
+
+```js
+import { font } from "@archetype/design-system";
+font.kit.url;   // "https://use.typekit.net/npe3lvr.css"
+```
+
+The build checks that the kit ships every weight the roles use — 400 and 500 for
+both sans cuts, 400 for the serif. A weight missing from the Adobe project does
+not error in a browser; it synthesises one, which is how a system quietly starts
+rendering faux-bold.
+
+**Set `font-display` in the Adobe project.** The kit currently serves
+`font-display: auto`, which blocks text while the faces load. It is a
+per-project setting in the Adobe Fonts web project UI and **cannot be overridden
+from the URL** — a `?display=` parameter is ignored. Set it to `swap` there and
+update `font.kit.fontDisplay`.
+
+**`font.use` can go back to `"proxy"`** to render the system anywhere the kit is
+not authorised — a fork, a sandbox, a domain the web project does not cover.
+**Archivo** and **Source Serif 4** stand in, self-hosted from the Fontsource CDN,
+and the package serves them itself.
 
 **One irreducible exception.** `assets/logo/archetype-wordmark.svg` and
 `archetype-lockup.svg` carry live text with a `font-family` attribute, because
-an SVG loaded through `<img>` cannot read CSS custom properties. Those two files
-need editing alongside the swap. Supplying them as **outlined vector** removes
-the exception permanently and is the better fix — a wordmark should not depend
-on a webfont loading at all.
+an SVG loaded through `<img>` cannot read CSS custom properties. They name
+`neue-haas-grotesk-display` directly, and the build fails if they drift out of
+step with `font.use`. That keeps the exception honest but does not remove it —
+supplying them as **outlined vector** does, and is the better fix. A wordmark
+should not depend on a webfont loading at all.
 
-### Unvalidated until the real faces land
+### Now testable, and worth testing
 
-- **Headline line breaks.** Archivo runs wider than Neue Haas, so every display
-  line will re-break. Treat current line endings as arbitrary.
-- **The Display/Text optical distinction.** Archivo is a single optical size, so
-  the two cuts render identically today. The boundary is declared and
-  structurally enforced, but cannot be judged by eye yet.
-- **The 15px serif hairline mitigation** was validated against Source Serif 4,
-  which has *lower* stroke contrast than Freight. The real face will be more
-  exposed, not less. Re-test at 15px.
+These were unverifiable while the system ran on proxies. They are not
+outstanding defects; they are the checks the real faces make possible.
+
+- **Headline line breaks.** Archivo ran wider than Neue Haas, so every display
+  line re-breaks on the swap. Anything with a hand-placed `<br>` was set against
+  the proxy and should be re-judged.
+- **The Display/Text optical distinction.** Archivo was a single optical size,
+  so the two cuts rendered identically. They no longer do — the 27/20 boundary
+  is now visible as well as enforced.
+- **The 15px serif hairline mitigation.** It was validated against Source Serif
+  4, which has *lower* stroke contrast than Freight, so the real face is more
+  exposed rather than less. `body-sm` on `text-emphasis` is the mitigation;
+  confirm it still holds at 15px.
+- **The Book cut below 17px.** The kit ships freight-text-pro at 300–900. The
+  system sets reading copy at 400, which is FreightText's Book weight — confirm
+  the naming in the Adobe project before treating this as settled.
 
 ---
 
@@ -432,7 +473,7 @@ emoji. Stroke 1.5 on a 24px grid.
 ### Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.0.0   # pin a tag, never a branch
+npm i github:we-are-archetype/design-system#v1.1.0   # pin a tag, never a branch
 ```
 
 `build/` is committed, so a git install needs no build step.
@@ -450,6 +491,18 @@ Last wins. The system goes **after** any dependency that declares the same names
 and **before** your own overrides. `@archetype/design-system/css` does not
 import the framework; use `/css/bundled` for a single entry that does — not
 both.
+
+### Load the fonts
+
+Not optional. The package declares the production faces and cannot serve them:
+
+```html
+<link rel="stylesheet" href="https://use.typekit.net/npe3lvr.css">
+```
+
+Take the URL from `font.kit.url` rather than typing it. Skip this and every
+stack falls through to its fallback — the whole system renders in Helvetica and
+Georgia. See §2.
 
 ### The short path is the role classes
 
@@ -547,3 +600,6 @@ Each rule encodes a failure this system can actually have:
 - A role naming a weight, size, leading, tracking or color that does not exist
 - A retired name coming back as a live token
 - Pure white or pure black reaching a generated declaration
+- The Adobe kit not shipping a weight the type roles use
+- The two live-text SVGs naming a family the system is no longer set to
+- `font.use` naming a stack that does not exist

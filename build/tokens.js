@@ -1,14 +1,14 @@
 /* Archetype design tokens — JavaScript.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.0.0
+   @archetype/design-system v1.1.0
 */
 // For anything that cannot read CSS: document pipelines, canvas rendering,
 // email templates, PDF generation, Figma sync.
 
 export const meta = {
   "name": "@archetype/design-system",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "spec": "DESIGN-SYSTEM.md",
   "note": "This file is the only place a value is typed. Everything in build/ is generated from it by scripts/build.mjs. DESIGN-SYSTEM.md carries prose rules and references tokens by name, never by value. If a hex appears in two places, one of them is wrong."
 };
@@ -139,7 +139,7 @@ export const role = {
     "letterSpacing": "-0.025em",
     "fontWeight": 400,
     "cut": "display",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#1A1816"
   },
   "display-lg": {
@@ -148,7 +148,7 @@ export const role = {
     "letterSpacing": "-0.02em",
     "fontWeight": 400,
     "cut": "display",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#1A1816"
   },
   "display-md": {
@@ -157,7 +157,7 @@ export const role = {
     "letterSpacing": "-0.015em",
     "fontWeight": 400,
     "cut": "display",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#1A1816"
   },
   "heading-lg": {
@@ -166,7 +166,7 @@ export const role = {
     "letterSpacing": "-0.01em",
     "fontWeight": 500,
     "cut": "display",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#1A1816"
   },
   "heading-md": {
@@ -175,7 +175,7 @@ export const role = {
     "letterSpacing": "0",
     "fontWeight": 500,
     "cut": "text",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-text\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#1A1816"
   },
   "heading-sm": {
@@ -184,7 +184,7 @@ export const role = {
     "letterSpacing": "0",
     "fontWeight": 500,
     "cut": "text",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-text\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#1A1816"
   },
   "eyebrow": {
@@ -193,7 +193,7 @@ export const role = {
     "letterSpacing": "0.14em",
     "fontWeight": 500,
     "cut": "text",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-text\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#635C55",
     "textTransform": "uppercase"
   },
@@ -203,7 +203,7 @@ export const role = {
     "letterSpacing": "0",
     "fontWeight": 400,
     "cut": "serif",
-    "family": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+    "family": "\"freight-text-pro\", Georgia, \"Times New Roman\", serif",
     "color": "#635C55"
   },
   "body-sm": {
@@ -212,7 +212,7 @@ export const role = {
     "letterSpacing": "0",
     "fontWeight": 400,
     "cut": "serif",
-    "family": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+    "family": "\"freight-text-pro\", Georgia, \"Times New Roman\", serif",
     "color": "#45403B"
   },
   "quote": {
@@ -221,7 +221,7 @@ export const role = {
     "letterSpacing": "0",
     "fontWeight": 400,
     "cut": "serif",
-    "family": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+    "family": "\"freight-text-pro\", Georgia, \"Times New Roman\", serif",
     "color": "#635C55"
   },
   "ui": {
@@ -230,7 +230,7 @@ export const role = {
     "letterSpacing": "0",
     "fontWeight": 400,
     "cut": "text",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-text\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#45403B"
   },
   "ui-sm": {
@@ -239,7 +239,7 @@ export const role = {
     "letterSpacing": "0.01em",
     "fontWeight": 400,
     "cut": "text",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-text\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#45403B"
   },
   "caption": {
@@ -248,8 +248,23 @@ export const role = {
     "letterSpacing": "0.02em",
     "fontWeight": 400,
     "cut": "text",
-    "family": "Archivo, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+    "family": "\"neue-haas-grotesk-text\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
     "color": "#635C55"
+  }
+};
+
+/** Font stacks in force, plus the Adobe kit that serves them.
+ *  Consumers link `font.kit.url` rather than typing it — see build/tokens.css. */
+export const font = {
+  "use": "production",
+  "display": "\"neue-haas-grotesk-display\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+  "text": "\"neue-haas-grotesk-text\", \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+  "serif": "\"freight-text-pro\", Georgia, \"Times New Roman\", serif",
+  "mono": "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+  "kit": {
+    "id": "npe3lvr",
+    "url": "https://use.typekit.net/npe3lvr.css",
+    "host": "https://use.typekit.net"
   }
 };
 
