@@ -11,6 +11,47 @@ Newest first.
 
 ---
 
+## 2026-08-25 — One drawn file, three derived
+
+**Decision:** `assets/logo/archetype-mark.svg` is the only hand-authored logo
+file. The square mark, wordmark and lockup are generated from it by
+`scripts/logo.mjs`, and the build fails if any of them is stale or if
+`tokens.json` describes geometry the mark is not drawn at.
+
+**Why:** the mark's path data was byte-identical in three files, and its
+geometry was described a fourth time as data in `tokens.json`. That is the exact
+condition this repo's central rule exists to prevent — "if a hex appears in two
+places, one of them is wrong" — applied to coordinates instead of colour, with
+nothing checking it.
+
+**It had already gone wrong.** `archetype-wordmark.svg` shipped
+`letter-spacing="1"` and `archetype-lockup.svg` shipped `1.16`. The spec asks
+for 0.02em, which at 58px is 1.16 — so the standalone wordmark had been wrong
+since the port, silently, in the file most likely to be handed to a printer.
+Both now derive it from `scale.tracking.wordmark`.
+
+**Verified, not asserted:** the generator reproduces
+`archetype-mark-square.svg` byte-for-byte from the hand-authored version. The
+derivation matches what a person did by hand, which is the only real evidence
+that it is the same operation.
+
+**What is derived and what is declared.** Geometry is derived: the square's
+centring offset, the lockup's gap and baseline. Typesetting is declared: the
+wordmark's canvas and font size. Text advance width depends on the face and
+cannot be computed without rendering a font, so pretending to derive it would be
+a lie with numbers in it. `capHeightRatio` is declared for the same reason and
+carries a note saying to re-measure it if the display family changes.
+
+**The limit, stated:** prose is unchecked. If a future mark changes the aspect,
+the build names the new ratio but cannot fix §6, `skill/SKILL.md` or the astro
+guide, all of which quote 1.24:1. The spec's own warning that "anything carrying
+1.17:1 or 1.28:1 is stale" is the record of that having already happened once.
+
+**Files:** `scripts/logo.mjs`, `scripts/build.mjs`, `tokens.json` `logo`,
+`.github/workflows/check.yml`
+
+---
+
 ## 2026-08-25 — The kit is the consumer's job, and the URL is not
 
 **Decision:** `font.use` moves to `"production"`. The consumer links the Adobe

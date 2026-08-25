@@ -14,6 +14,16 @@ jobs:
 
       # build/ is committed so consumers can install straight from a git tag
       # without a build step. That only works if it is never stale.
+      # The logo family derives from one drawn file. Same contract as build/:
+      # generated, committed, and never allowed to go stale.
+      - name: Regenerate the logo and fail if it is out of date
+        run: |
+          node scripts/logo.mjs
+          git diff --exit-code assets/logo/ || {
+            echo "::error::assets/logo/ is out of date. Run 'npm run logo' and commit the result."
+            exit 1
+          }
+
       - name: Rebuild and fail if build/ is out of date
         run: |
           node scripts/build.mjs

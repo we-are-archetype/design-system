@@ -15,6 +15,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { ratio, lum } from "../lib/contrast.mjs";
+import { readGeometry, staleFiles } from "./logo.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const T = JSON.parse(readFileSync(join(ROOT, "tokens.json"), "utf8"));
@@ -259,6 +260,62 @@ for (const key of ["gutter", "section-pad-y"]) {
         fail(`${rel} sets font-family "${declared[1].split(",")[0]}" but the system is on "${want}". ${T.assets.outlineNote}`);
       }
     }
+  }
+}
+
+// 15. The logo. archetype-mark.svg is the only drawn file; the other three are
+//     derived from it, and tokens.json describes its geometry as data. All three
+//     of those can drift from the art, and used to have nothing stopping them —
+//     the standalone wordmark shipped 0.017em of tracking against the lockup's
+//     0.02em because both were hand-copies.
+{
+  let g;
+  try {
+    g = readGeometry(readFileSync(join(ROOT, "assets/logo/archetype-mark.svg"), "utf8"));
+  } catch (e) {
+    fail(`Could not read the logo geometry: ${e.message}`);
+  }
+
+  if (g) {
+    const L = T.logo;
+    const eq = (a, b) => Math.abs(a - b) < 0.01;
+    const cmp = (label, drawn, declared) => {
+      if (drawn === null || drawn === undefined) {
+        fail(`archetype-mark.svg declares no ${label}, which tokens.json records as ${declared}.`);
+      } else if (!eq(drawn, declared)) {
+        fail(`logo.${label} says ${declared}, but archetype-mark.svg is drawn at ${drawn}. The file is the source; update tokens.json.`);
+      }
+    };
+
+    cmp("viewBox.width", g.width, L.viewBox.width);
+    cmp("viewBox.height", g.height, L.viewBox.height);
+    cmp("aspect", g.aspect, L.aspect);
+    cmp("circle.cx", g.circle.cx, L.circle.cx);
+    cmp("circle.cy", g.circle.cy, L.circle.cy);
+    cmp("circle.r", g.circle.r, L.circle.r);
+    cmp("circle.stroke", g.circle.stroke, L.circle.stroke);
+
+    // "The circle stroke is exactly half the triangle and crossbar weight."
+    // The spec states it as a rule, so it is checked as one rather than trusted.
+    const heavy = Math.max(...g.strokes);
+    if (g.strokes.length && !eq(g.circle.stroke * 2, heavy)) {
+      fail(`The circle stroke is ${g.circle.stroke} against a heaviest stroke of ${heavy}. §6 requires the circle to be exactly half.`);
+    }
+
+    // The aspect is quoted as a string in several places, and a stale one is how
+    // 1.17:1 and 1.28:1 survived past the revisions that made them wrong.
+    const quoted = `${g.aspect.toFixed(2)}:1`;
+    if (T.assets.logo.mark.aspect !== quoted) {
+      fail(`assets.logo.mark.aspect is "${T.assets.logo.mark.aspect}" but the mark is drawn at ${quoted}.`);
+    }
+
+    notes.push(`  logo  ${g.width}x${g.height}  ${quoted}  circle r${g.circle.r}/${g.circle.stroke} vs ${heavy}  ✓`);
+  }
+
+  // Derived files must match the mark as drawn, the same way build/ must match
+  // tokens.json. Regenerating is `npm run logo`.
+  for (const rel of staleFiles()) {
+    fail(`${rel} is stale — it no longer matches archetype-mark.svg. Run \`npm run logo\`.`);
   }
 }
 

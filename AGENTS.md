@@ -36,6 +36,32 @@ come back, and deleting the entry loses the record of why it went.
 namespace: `--color-border-default`, not `--border-default`. A retired entry
 whose name never appears in the output is a check that silently passes forever.
 
+## Updating the mark
+
+`assets/logo/archetype-mark.svg` is the **only** hand-authored logo file. The
+square mark, the wordmark and the lockup are generated from it.
+
+```bash
+# 1. replace assets/logo/archetype-mark.svg with the new art
+#    — convert every fill/stroke to currentColor, or it will not invert on dark
+npm run logo      # regenerate square, wordmark, lockup
+npm run build     # will FAIL and tell you what tokens.json now gets wrong
+# 2. update tokens.json `logo` with the numbers the failure names
+npm run build && npm run specimen
+```
+
+The build reads the geometry back out of the file and compares it to
+`tokens.json` → `logo`, so you cannot ship art that disagrees with the recorded
+description of it. It also enforces §6's rule that the circle stroke is exactly
+half the triangle and crossbar weight.
+
+**The one thing it cannot check is prose.** If the aspect changes, grep for the
+old ratio — `DESIGN-SYSTEM.md` §6, `skill/SKILL.md` and `docs/consumers/astro.md`
+all quote it, and the spec's own warning that "anything carrying 1.17:1 or
+1.28:1 is stale" exists because that has already happened once.
+
+Consumers then bump the tag and re-run their own favicon generation.
+
 ## Releasing
 
 Bump `meta.version` in `tokens.json` **and** `version` in `package.json`, add a

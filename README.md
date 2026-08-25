@@ -150,6 +150,9 @@ The validator encodes the failure modes a system like this actually has:
 - The Adobe kit not shipping a weight the type roles use
 - The two live-text SVGs naming a family the system is no longer set to
 - `font.use` naming a stack that does not exist
+- `tokens.json` describing geometry the mark is not actually drawn at
+- A derived logo file no longer matching the mark
+- The circle stroke ceasing to be exactly half the triangle and crossbar weight
 
 Change a value and the build tells you which piece of the interface just stopped
 being legible, with the ratio.
@@ -172,11 +175,12 @@ tokens.json            the only place a value is typed
 DESIGN-SYSTEM.md       the written spec; §9 is the consumer contract
 DECISIONS.md           why the rules have the shape they do
 scripts/build.mjs      generator and validator, no dependencies
+scripts/logo.mjs       derives the logo family from archetype-mark.svg
 lib/contrast.mjs       WCAG maths, shared so one ratio has one answer
 build/tokens.css       generated: Tailwind v4 @theme, dark block, role classes
 build/tokens.js        generated: resolved values for non-CSS pipelines
 build/tokens.d.ts      generated: declarations, with literal key unions
-assets/logo/           logo SVG sources, all on currentColor
+assets/logo/           archetype-mark.svg is drawn; the other three are generated
 docs/consumers/        worked setups for consuming projects
 skill/SKILL.md         portable agent skill
 ```

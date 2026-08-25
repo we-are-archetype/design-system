@@ -367,6 +367,18 @@ physics, no parallax, no decorative motion.** Restraint is the point.
 only edit from the supplied file is `black` → `currentColor`, so the mark can
 invert on dark surfaces. Every coordinate and stroke width is untouched.
 
+**It is the only hand-authored logo file.** `archetype-mark-square.svg`,
+`archetype-wordmark.svg` and `archetype-lockup.svg` are generated from it by
+`scripts/logo.mjs` — the square offset, the lockup gap and the wordmark tracking
+are all arithmetic on the numbers below. The build reads the geometry back out
+of the file and fails if this section's figures, `tokens.json` → `logo`, or any
+derived file disagrees with what is actually drawn.
+
+To revise the mark: replace that one file, run `npm run logo`, then `npm run
+build` and fix whatever it names. Prose is the part it cannot check — if the
+aspect moves, the figures quoted here and in `skill/SKILL.md` and
+`docs/consumers/astro.md` need a pass.
+
 Geometry, in the file's own 667×540 coordinate space:
 
 - **Circle** — `cx 333.5, cy 290, r 245`, stroke **10**.
@@ -603,3 +615,6 @@ Each rule encodes a failure this system can actually have:
 - The Adobe kit not shipping a weight the type roles use
 - The two live-text SVGs naming a family the system is no longer set to
 - `font.use` naming a stack that does not exist
+- `tokens.json` describing geometry the mark is not actually drawn at
+- A derived logo file no longer matching the mark
+- The circle stroke ceasing to be exactly half the triangle and crossbar weight
