@@ -39,6 +39,43 @@ The logo family gets a single source, the way the tokens already had one.
 `archetype-mark.svg` is untouched. This release changes how the other three are
 produced, not what the mark is.
 
+## 1.1.2 — 2026-08-25
+
+Preconnect hints as a single-source value, and `font-display` recorded per
+family — because Adobe sets it per family, which is easy to get half-done.
+
+### Added
+- `font.kit.preconnect` — the origins a consumer should warm, in document
+  order, exported through `font` and typed in `tokens.d.ts`. **Two, not one.**
+  `use.typekit.net` serves the kit stylesheet and every font binary; the kit CSS
+  then `@import`s `p.typekit.net/p.css`, a second origin the browser cannot
+  discover until the first sheet has arrived, and render-blocking because an
+  `@import` blocks the sheet containing it. Consumers map the array rather than
+  typing hosts.
+- The consumer comment in `build/tokens.css` now shows the preconnects
+  alongside the stylesheet link, generated from that same array.
+
+### Changed
+- `font.kit.fontDisplay` is now a map of family → value, replacing the single
+  `fontDisplayNote` string. Adobe sets `font-display` **per family**, not once
+  per project, so changing it on one family silently leaves the others on
+  `auto`. The flat field could not express the state and quietly implied the
+  setting was global.
+- `npm run build` prints each family's recorded `font-display` next to its
+  weight check, and marks the ones that block. Not a build failure: the fix is
+  a click in a third-party UI, and a build that cannot pass until someone else
+  clicks a button is a bad build.
+- The pinned install version in `README.md`, `DESIGN-SYSTEM.md` and
+  `docs/consumers/astro.md` was still `v1.1.0`.
+
+### Still outstanding
+- **Both Neue Haas cuts are on `font-display: auto`**; only `freight-text-pro`
+  is on `fallback`. Every heading, label, button, nav item and the wordmark is
+  therefore invisible until its face loads, while body copy is not. Fix it per
+  family in the Adobe Fonts web project, then update `font.kit.fontDisplay`.
+- Outlining the two live-text SVGs would remove their webfont dependency, and
+  with it the wordmark's share of this problem.
+
 ## 1.1.1 — 2026-08-25
 
 ### Added

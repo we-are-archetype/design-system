@@ -1,6 +1,6 @@
 {
   "name": "@archetype/design-system",
-  "version": "1.2.0",
+  "version": "1.1.2",
   "description": "Archetype brand design system. Tokens, spec, and generated outputs for Tailwind v4.",
   "type": "module",
   "license": "MIT",

@@ -1,7 +1,7 @@
 /* Archetype design tokens — type declarations.
    GENERATED FROM tokens.json — DO NOT EDIT BY HAND. Run `npm run build`.
    Prose rules live in DESIGN-SYSTEM.md and reference tokens by name, never by value.
-   @archetype/design-system v1.2.0
+   @archetype/design-system v1.1.2
 */
 
 export type ColorName =
@@ -128,8 +128,17 @@ export interface Font {
   text: string;
   serif: string;
   mono: string;
-  /** Present only when `use` is "production". The consumer must link kit.url. */
-  kit?: { id: string; url: string; host: string };
+  /**
+   * Present only when `use` is "production". The consumer must link
+   * `kit.url`, and should preconnect every origin in `kit.preconnect`.
+   */
+  kit?: {
+    id: string;
+    url: string;
+    host: string;
+    /** Origins to warm, in document order. See font.kit.preconnectNote. */
+    preconnect: readonly string[];
+  };
 }
 
 export const meta: Meta;

@@ -219,15 +219,24 @@ stylesheet, and a consumer that forgets it renders the entire system in
 Helvetica and Georgia.**
 
 ```html
+<link rel="preconnect" href="https://use.typekit.net" crossorigin>
+<link rel="preconnect" href="https://p.typekit.net" crossorigin>
 <link rel="stylesheet" href="https://use.typekit.net/npe3lvr.css">
 ```
+
+**Two preconnects, not one.** `use.typekit.net` serves the kit stylesheet and
+every font binary. The kit CSS then `@import`s `p.typekit.net/p.css` — a second
+origin the browser cannot discover until the first stylesheet has arrived, and
+render-blocking because an `@import` blocks the sheet that contains it. Warming
+both removes a DNS and TLS round trip from that chain.
 
 Read the URL from the package rather than typing it, so it stays a single-source
 value like everything else:
 
 ```js
 import { font } from "@archetype/design-system";
-font.kit.url;   // "https://use.typekit.net/npe3lvr.css"
+font.kit.url;          // "https://use.typekit.net/npe3lvr.css"
+font.kit.preconnect;   // both origins, in document order
 ```
 
 The build checks that the kit ships every weight the roles use — 400 and 500 for
@@ -235,11 +244,16 @@ both sans cuts, 400 for the serif. A weight missing from the Adobe project does
 not error in a browser; it synthesises one, which is how a system quietly starts
 rendering faux-bold.
 
-**Set `font-display` in the Adobe project.** The kit currently serves
-`font-display: auto`, which blocks text while the faces load. It is a
-per-project setting in the Adobe Fonts web project UI and **cannot be overridden
-from the URL** — a `?display=` parameter is ignored. Set it to `swap` there and
-update `font.kit.fontDisplay`.
+**`font-display` is set per family, not per project.** Changing it on one
+family in the Adobe Fonts UI leaves the others untouched, and nothing warns you.
+`font.kit.fontDisplay` records the state family by family, and the build prints
+it next to each family on every run.
+
+A family left on `auto` **blocks**: its text is invisible until the face loads,
+rather than showing a fallback. It cannot be overridden from the URL — a
+`?display=` parameter is ignored. As recorded, `freight-text-pro` is on
+`fallback` and both Neue Haas cuts are still on `auto`, which means every
+heading, label, button and nav item blocks while body copy does not.
 
 **`font.use` can go back to `"proxy"`** to render the system anywhere the kit is
 not authorised — a fork, a sandbox, a domain the web project does not cover.
@@ -485,7 +499,7 @@ emoji. Stroke 1.5 on a 24px grid.
 ### Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.1.0   # pin a tag, never a branch
+npm i github:we-are-archetype/design-system#v1.1.2   # pin a tag, never a branch
 ```
 
 `build/` is committed, so a git install needs no build step.

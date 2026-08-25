@@ -231,7 +231,18 @@ for (const key of ["gutter", "section-pad-y"]) {
             fail(`kit family "${family}" does not ship weight ${w}, which a type role uses. The browser would synthesise it.`);
           }
         }
-        notes.push(`  kit ${family.padEnd(26)} needs ${[...weights].sort((a, b) => a - b).join(", ")}  ✓`);
+        // font-display is recorded per family because Adobe sets it per family.
+        // Not a build failure — the fix is a click in someone else's UI, and a
+        // build that cannot pass until that happens is a bad build. But a family
+        // left on auto renders its text invisible until it loads, so say so.
+        const display = kit.fontDisplay?.[family];
+        const blocks = display === "auto" || display === "block";
+        notes.push(
+          `  kit ${family.padEnd(26)} needs ${[...weights].sort((a, b) => a - b).join(", ")}  ✓` +
+            (display
+              ? `   font-display:${display}${blocks ? "  ← BLOCKS, text invisible while it loads" : ""}`
+              : "")
+        );
       }
     }
   }
@@ -367,10 +378,12 @@ if (T.font.use === "proxy") {
   css += `/* REQUIRED: this file declares the production faces but cannot serve them.
    The Adobe Fonts web project is bound to a domain, so the consumer loads it:
 
+${(T.font.kit.preconnect ?? [T.font.kit.host]).map((h) => `     <link rel="preconnect" href="${h}" crossorigin>`).join("\n")}
      <link rel="stylesheet" href="${T.font.kit.url}">
 
-   Import the URL from this package rather than typing it —
-   \`import { font } from "@archetype/design-system"\` → \`font.kit.url\`.
+   Import these from this package rather than typing them —
+   \`import { font } from "@archetype/design-system"\` → \`font.kit.preconnect\`
+   and \`font.kit.url\`.
 
    Without that stylesheet every stack falls through to its fallback and the
    whole system renders in Helvetica and Georgia. The fastest way to notice is
@@ -589,7 +602,14 @@ export const font = ${JSON.stringify(
     serif: fam.serif,
     mono: T.font.mono,
     ...(T.font.use === "production" && T.font.kit
-      ? { kit: { id: T.font.kit.id, url: T.font.kit.url, host: T.font.kit.host } }
+      ? {
+          kit: {
+            id: T.font.kit.id,
+            url: T.font.kit.url,
+            host: T.font.kit.host,
+            preconnect: T.font.kit.preconnect ?? [T.font.kit.host],
+          },
+        }
       : {}),
   },
   null,
@@ -660,8 +680,17 @@ export interface Font {
   text: string;
   serif: string;
   mono: string;
-  /** Present only when \`use\` is "production". The consumer must link kit.url. */
-  kit?: { id: string; url: string; host: string };
+  /**
+   * Present only when \`use\` is "production". The consumer must link
+   * \`kit.url\`, and should preconnect every origin in \`kit.preconnect\`.
+   */
+  kit?: {
+    id: string;
+    url: string;
+    host: string;
+    /** Origins to warm, in document order. See font.kit.preconnectNote. */
+    preconnect: readonly string[];
+  };
 }
 
 export const meta: Meta;

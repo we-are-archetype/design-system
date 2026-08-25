@@ -6,7 +6,7 @@ runs. Astro 7, Tailwind v4 through the Vite plugin, this system pinned to a tag.
 ## Install
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.1.0
+npm i github:we-are-archetype/design-system#v1.1.2
 npm i -D tailwindcss @tailwindcss/vite
 ```
 
@@ -168,20 +168,29 @@ single-source value:
 import { font } from "@archetype/design-system";
 ---
 <head>
-  <link rel="preconnect" href={font.kit.host} crossorigin />
+  {font.kit.preconnect.map((host) => (
+    <link rel="preconnect" href={host} crossorigin />
+  ))}
   <link rel="stylesheet" href={font.kit.url} />
 </head>
 ```
 
-The `preconnect` warms the TLS handshake to `use.typekit.net` while the HTML is
-still parsing, which is worth a round trip on first paint.
+`font.kit.preconnect` carries **two** origins. `use.typekit.net` serves the kit
+stylesheet and every font binary; the kit CSS then `@import`s
+`p.typekit.net/p.css`, which the browser cannot discover until the first sheet
+has arrived and which blocks the sheet that imports it. Map the array rather
+than typing the hosts, so a change to the kit does not need a change here.
 
-### Set font-display in the Adobe project
+### font-display is per family
 
-The kit currently serves `font-display: auto`, so text is invisible while the
-faces load rather than showing a fallback. It is a per-project setting in the
-Adobe Fonts web project UI and **cannot be overridden from the URL** — appending
-`?display=swap` is silently ignored. Change it there.
+It is set family by family in the Adobe Fonts web project, not once per project,
+and changing one family leaves the rest alone. A family on `auto` blocks — its
+text is invisible until the face loads rather than showing a fallback — and a
+`?display=` parameter on the URL is ignored.
+
+`font.kit.fontDisplay` records the state per family and `npm run build` prints
+it. As recorded, both Neue Haas cuts are still on `auto`, so headings, labels,
+buttons and nav block on a cold cache while body copy does not.
 
 ### Running without the kit
 

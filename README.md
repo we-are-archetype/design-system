@@ -21,7 +21,7 @@ never by value. If a hex appears in two places, one of them is wrong.
 ## Starting a new consumer
 
 ```bash
-npm i github:we-are-archetype/design-system#v1.1.0   # pin a tag, never a branch
+npm i github:we-are-archetype/design-system#v1.1.2   # pin a tag, never a branch
 ```
 
 ```css
@@ -97,6 +97,8 @@ bound to a domain — so this package declares them and cannot serve them.
 Georgia.**
 
 ```html
+<link rel="preconnect" href="https://use.typekit.net" crossorigin>
+<link rel="preconnect" href="https://p.typekit.net" crossorigin>
 <link rel="stylesheet" href="https://use.typekit.net/npe3lvr.css">
 ```
 
